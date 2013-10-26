@@ -85,7 +85,17 @@ class DataHandler(webapp2.RequestHandler):
                                 'Location: ' + noNone(s.location) + '<br/>' +
                                 'Start Time: ' + noNoneDate(s.start_date) + '<br/>'
                                 'End Time: ' + noNoneDate(s.end_date) + '<br/> <br/>')
- 
+
+class DeleteHandler(webapp2.RequestHandler):
+    def get(self):
+
+        session_query = Session.query(ancestor=ndb.Key('Type', 'Session'))
+        sessions = session_query.fetch(100)
+        
+        for s in sessions:
+            self.response.write('Deleted: ' + s.name + '<br/>')
+            s.key.delete()
+
 def noNone(input):
     if input is None:
         return 'N/A'
@@ -100,7 +110,8 @@ def noNoneDate(date):
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
-    ('/data', DataHandler)
+    ('/data', DataHandler),
+    ('/delete', DeleteHandler)
 ], debug=True)
 
 
