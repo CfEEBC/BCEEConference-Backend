@@ -19,6 +19,7 @@ from session import *
 import datetime
 import time
 from time import mktime
+import json
 
 
 MAIN_PAGE_FOOTER_TEMPLATE = """\
@@ -140,13 +141,32 @@ def noNoneDate(date):
         return date.isoformat()
 
 
+class jsonHandler(webapp2.RequestHandler):
+
+    def get(self):
+      key = ndb.Key('Type', 'Session')
+      session_query = Session.query(ancestor=key)
+        
+      sessions = session_query.fetch(100)
+      string_json = "["
+      for s in sessions:
+        string_json = string_json + json.dumps({"session_name" : s.name, "location" : s.location,
+                    "stime" : str(s.start_date), "edate" : str(s.end_date) }) + ","
+
+      string_json = string_json[0:-1] + "]"
+
+      self.response.write(string_json)
+
+
+
 
 
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
     ('/data', DataHandler),
-    ('/delete', DeleteHandler)
+    ('/delete', DeleteHandler),
+    ('/machine.json' , jsonHandler)
 ], debug=True)
 
 
