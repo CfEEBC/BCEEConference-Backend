@@ -199,7 +199,9 @@ class jsonHandler(webapp2.RequestHandler):
       string_json = "["
       for s in sessions:
         string_json = string_json + json.dumps({"session_name" : s.name, "location" : s.location,
-                    "stime" : str(s.start_date), "edate" : str(s.end_date) }) + ","
+                    "stime" : str(s.start_date), "etime" : str(s.end_date),
+                    "description" : s.description, "speakers" : s.speakers,
+                    "biography" : s.biography, "survey_link" : s.survey }) + ","
 
       string_json = string_json[0:-1] + "]"
 
@@ -214,7 +216,7 @@ app = webapp2.WSGIApplication([
     ('/', MainHandler),
     ('/data', DataHandler),
     ('/delete', DeleteHandler),
-    ('/machine.json' , jsonHandler)
+    ('/machine' , jsonHandler)
 ], debug=True)
 
 
