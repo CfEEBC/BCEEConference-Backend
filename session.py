@@ -18,4 +18,8 @@ class Session(ndb.Model):
 	start_date = ndb.DateTimeProperty(auto_now_add=False)
 	end_date = ndb.DateTimeProperty(auto_now_add=False)
 	location = ndb.StringProperty()
+	speakers = ndb.StringProperty()
+	biography = ndb.StringProperty()
+
+	
 
