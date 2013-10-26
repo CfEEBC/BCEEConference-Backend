@@ -43,18 +43,19 @@ class MainHandler(webapp2.RequestHandler):
         self.response.write(MAIN_PAGE_FOOTER_TEMPLATE)
         
     def post(self):
-        session1 = Session(name=self.request.get("session_name"),
-            description=self.request.get("session_description"),
-            location=self.request.get("session_location"),
-            parent=session_key("asdf"))
+        session_name = self.request.get("session_name")
+        session1 = Session(name=session_name,
+                           description=self.request.get("session_description"),
+                           location=self.request.get("session_location"),
+                           parent=ndb.Key('Type', 'Session', 'Name', session_name))
         session1.put()
         self.response.write('stored!')
 
 class DataHandler(webapp2.RequestHandler):
 
     def get(self):
-        session_query = Session.query(ancestor=session_key("asdf"))
-        session = session_query.fetch(1)
+        session_query = Session.query(ancestor=ndb.Key('Type', 'Session'))
+        session = session_query.fetch(100)
         
         for s in session:
             self.response.write(s.name)
