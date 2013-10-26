@@ -49,7 +49,9 @@ MAIN_PAGE_FOOTER_TEMPLATE = """\
 </html>
 """
 def delete_form_create(session_name):
-        delete_form = '<div><input type="submit" value="Delete"></div>'
+        delete_form = """<form action="/delete" method="post">
+        <input type="hidden" name="key" value="%s">
+        <input type="submit" value="Delete"></form>""" % session_name
         return delete_form
 
 class MainHandler(webapp2.RequestHandler):
@@ -112,14 +114,18 @@ class DataHandler(webapp2.RequestHandler):
 
 
 class DeleteHandler(webapp2.RequestHandler):
-    def get(self):
+    
 
-        session_query = Session.query(ancestor=ndb.Key('Type', 'Session'))
+    def post(self):
+        key = ndb.Key('Type', 'Session', 'Name', self.request.get("key"))
+        session_query = Session.query(ancestor=key)
+        
         sessions = session_query.fetch(100)
         
         for s in sessions:
             self.response.write('Deleted: ' + s.name + '<br/>')
             s.key.delete()
+
 
 def noNone(input):
     if input is None:
@@ -132,6 +138,10 @@ def noNoneDate(date):
         return 'N/A'
     else:
         return date.isoformat()
+
+
+
+
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
