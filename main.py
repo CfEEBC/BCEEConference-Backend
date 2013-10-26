@@ -64,8 +64,14 @@ class DataHandler(webapp2.RequestHandler):
         session_query = Session.query(ancestor=ndb.Key('Type', 'Session'))
         session = session_query.fetch(100)
         
+        self.response.write('Current sessions: ' +  '<br/>')
+
         for s in session:
-            self.response.write(s.name)
+            self.response.write('Name: ' + s.name + '<br/>' +
+                                'Decription: ' + s.description + '<br/>' +
+                                'Location: ' + s.location + '<br/>' +
+                                'Start Time: ' + s.start_time + '<br/>' +
+                                'End Time: ' + s.end_time + '<br/>')
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
