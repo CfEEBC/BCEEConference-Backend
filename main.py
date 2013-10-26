@@ -43,18 +43,17 @@ class MainHandler(webapp2.RequestHandler):
         self.response.write(MAIN_PAGE_FOOTER_TEMPLATE)
         
     def post(self):
-    	session1 = Session(name=self.request.get("session_name")
-    		, description=self.request.get("session_description")
-    		, location=self.request.get("session_location"),
+        session1 = Session(name=self.request.get("session_name"),
+            description=self.request.get("session_description"),
+            location=self.request.get("session_location"),
             parent=session_key("asdf"))
-    	session1.put()
+        session1.put()
         self.response.write('stored!')
 
 class DataHandler(webapp2.RequestHandler):
 
     def get(self):
-        session_query = Session.query(
-            ancestor=session_key("asdf"))
+        session_query = Session.query(ancestor=session_key("asdf"))
         session = session_query.fetch(1)
         
         for s in session:
