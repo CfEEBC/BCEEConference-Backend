@@ -15,7 +15,7 @@
 # limitations under the License.
 #
 import webapp2
-import session
+from session import *
 
 
 MAIN_PAGE_FOOTER_TEMPLATE = """\
@@ -41,18 +41,28 @@ class MainHandler(webapp2.RequestHandler):
 
     def get(self):
         self.response.write(MAIN_PAGE_FOOTER_TEMPLATE)
-
+        
     def post(self):
     	session1 = Session(name=self.request.get("session_name")
     		, description=self.request.get("session_description")
-    		, location=self.request.get("session_location"))
+    		, location=self.request.get("session_location"),
+            parent=session_key("asdf"))
+    	session1.put()
+        self.response.write('stored!')
 
-    	session1.put()	 
+class DataHandler(webapp2.RequestHandler):
+
+    def get(self):
+        session_query = Session.query(
+            ancestor=session_key("asdf"))
+        session = session_query.fetch(1)
+        
+        for s in session:
+            self.response.write(s.name)
 
 app = webapp2.WSGIApplication([
-    ('/', MainHandler)
+    ('/', MainHandler),
+    ('/data', DataHandler)
 ], debug=True)
 
 
-
-		
