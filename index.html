@@ -43,9 +43,14 @@ if (location == null || location == "") {
 } else if (end_time == null || end_time == "") {
     alert("Please specify an ending time");
     return false;
+} else if (location.length > 500 || description.length > 500 || speakers.length > 500 ||
+            biography.length > 500 || survey_link.length > 500 || name.length > 500){
+    alert("Please limit all fields to 500 characters");
+    return false;
 } else {
     return true;
 }
+
 }
 </script>
 
