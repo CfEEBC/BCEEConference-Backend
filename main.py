@@ -48,6 +48,9 @@ MAIN_PAGE_FOOTER_TEMPLATE = """\
   </body>
 </html>
 """
+def delete_form_create(session_name):
+        delete_form = '<div><input type="submit" value="Delete"></div>'
+        return delete_form
 
 class MainHandler(webapp2.RequestHandler):
 
@@ -86,6 +89,7 @@ class MainHandler(webapp2.RequestHandler):
 
 class DataHandler(webapp2.RequestHandler):
 
+
     def get(self):
         session_query = Session.query(ancestor=ndb.Key('Type', 'Session'))
         session = session_query.fetch(100)
@@ -93,12 +97,19 @@ class DataHandler(webapp2.RequestHandler):
         self.response.write('Current sessions: ' +  '<br/>')
 
         for s in session:
-            print s.end_date
+            
             self.response.write('Name: ' + noNone(s.name) + '<br/>' +
                                 'Decription: ' + noNone(s.description) + '<br/>' +
                                 'Location: ' + noNone(s.location) + '<br/>' +
+                                'Speaker(s): ' + noNone(s.speakers) + '<br/>' +
+                                'Biography: ' + noNone(s.biography) + '<br/>' +
+                                'Survey Link: ' + noNone(s.survey) + '<br/>' +
                                 'Start Time: ' + noNoneDate(s.start_date) + '<br/>'
-                                'End Time: ' + noNoneDate(s.end_date) + '<br/> <br/>')
+                                'End Time: ' + noNoneDate(s.end_date) +  
+                                delete_form_create(s.name) + '<br/> <br/>' )
+
+
+
 
 class DeleteHandler(webapp2.RequestHandler):
     def get(self):
