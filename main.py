@@ -16,6 +16,9 @@
 #
 import webapp2
 from session import *
+import datetime
+import time
+from time import mktime
 
 
 MAIN_PAGE_FOOTER_TEMPLATE = """\
@@ -32,7 +35,7 @@ MAIN_PAGE_FOOTER_TEMPLATE = """\
       <div><textarea name="session_name" rows="1" cols="60"></textarea></div>
       Date: <input type="date" name="date">
       Start time: <input type="time" name="start_time">
-      End time: <input type="time" name="start_time">
+      End time: <input type="time" name="end_time">
       <div><input type="submit" value="Submit Information"></div>
     </form>
 
@@ -51,10 +54,19 @@ class MainHandler(webapp2.RequestHandler):
         
     def post(self):
         session_name = self.request.get("session_name")
+        date = self.request.get("date")
+        start = date + " " + self.request.get("start_time")
+        start_timedate = time.strptime(start, "%Y-%m-%d %H:%M")
+        end = date + " " + self.request.get("end_time")
+        end_timedate = time.strptime(end, "%Y-%m-%d %H:%M")
         session1 = Session(name=session_name,
                            description=self.request.get("session_description"),
                            location=self.request.get("session_location"),
-                           parent=ndb.Key('Type', 'Session', 'Name', session_name))
+                           parent=ndb.Key('Type', 'Session', 'Name', session_name),
+                           start_date=datetime.datetime.fromtimestamp(mktime(start_timedate)),
+                           end_date=datetime.datetime.fromtimestamp(mktime(end_timedate)),
+                           speakers=self.request.get("speakers"),
+                           biography=self.request.get("biography"))
         session1.put()
         self.response.write('stored!')
 
