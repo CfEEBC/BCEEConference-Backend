@@ -34,6 +34,10 @@ var speakers = document.forms['addSessionForm']['speakers'].value;
 var biography = document.forms['addSessionForm']['biography'].value;
 var survey_link = document.forms['addSessionForm']['survey_link'].value;
 var name = document.forms['addSessionForm']['session_name'].value;
+var date = document.forms['addSessionForm']['date'].value;
+var start_time = document.forms['addSessionForm']['start_time'].value;
+var end_time = document.forms['addSessionForm']['end_time'].value;
+
 if (location == null || location == "") {
     alert("Please enter a location");
     return false;
@@ -51,6 +55,15 @@ if (location == null || location == "") {
     return false;
 } else if (name == null || name == "") {
     alert("Please enter a name");
+    return false;
+} else if (date == null || date == "") {
+    alert("Please specify a date");
+    return false;
+} else if (start_time == null || start_time == "") {
+    alert("Please specify a starting time");
+    return false;
+} else if (end_time == null || end_time == "") {
+    alert("Please specify an ending time");
     return false;
 } else {
     return true;
