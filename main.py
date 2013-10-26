@@ -79,11 +79,24 @@ class DataHandler(webapp2.RequestHandler):
         self.response.write('Current sessions: ' +  '<br/>')
 
         for s in session:
-            self.response.write('Name: ' + s.name + '<br/>' +
-                                'Decription: ' + s.description + '<br/>' +
-                                'Location: ' + s.location + '<br/>' +
-                                'Start Time: ' + s.start_time + '<br/>' +
-                                'End Time: ' + s.end_time + '<br/>')
+            print s.end_date
+            self.response.write('Name: ' + noNone(s.name) + '<br/>' +
+                                'Decription: ' + noNone(s.description) + '<br/>' +
+                                'Location: ' + noNone(s.location) + '<br/>' +
+                                'Start Time: ' + noNoneDate(s.start_date) + '<br/>'
+                                'End Time: ' + noNoneDate(s.end_date) + '<br/> <br/>')
+ 
+def noNone(input):
+    if input is None:
+        return 'N/A'
+    else:
+        return input
+
+def noNoneDate(date):
+    if date is None:
+        return 'N/A'
+    else:
+        return date.isoformat()
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
