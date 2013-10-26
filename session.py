@@ -20,6 +20,7 @@ class Session(ndb.Model):
 	location = ndb.StringProperty()
 	speakers = ndb.StringProperty()
 	biography = ndb.StringProperty()
+	survey = ndb.StringProperty()
 
 	
 
