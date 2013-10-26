@@ -21,8 +21,46 @@ import time
 from time import mktime
 
 
-MAIN_PAGE_FOOTER_TEMPLATE = """\
-    <form action="/" method="post">
+MAIN_PAGE_FOOTER_TEMPLATE = """
+<!DOCTYPE html>
+<html>
+<head>
+<title>BCEE Conference App</title>
+<script>
+function validateForms() {
+var location = document.forms['addSessionForm']['session_location'].value;
+var description = document.forms['addSessionForm']['session_description'].value;
+var speakers = document.forms['addSessionForm']['speakers'].value;
+var biography = document.forms['addSessionForm']['biography'].value;
+var survey_link = document.forms['addSessionForm']['survey_link'].value;
+var name = document.forms['addSessionForm']['session_name'].value;
+if (location == null || location == "") {
+    alert("Please enter a location");
+    return false;
+} else if (description == null || description == "") {
+    alert("Please enter a description");
+    return false;
+} else if (speakers == null || speakers == "") {
+    alert("Please enter a list of speakers");
+    return false;
+} else if (biography == null || biography == "") {
+    alert("Please enter a biography");
+    return false;
+} else if (survey_link == null || survey_link == "") {
+    alert("Please enter a survey link");
+    return false;
+} else if (name == null || name == "") {
+    alert("Please enter a name");
+    return false;
+} else {
+    return true;
+}
+}
+</script>
+</head>
+
+<body>
+    <form action="/" method="post" name="addSessionForm" onsubmit="return validateForms()">
       Session Location
       <div><textarea name="session_location" rows="3" cols="60"></textarea></div>
       Session Description
@@ -41,11 +79,8 @@ MAIN_PAGE_FOOTER_TEMPLATE = """\
       <div><input type="submit" value="Submit Information"></div>
     </form>
 
-    
+</body>
 
-   
-
-  </body>
 </html>
 """
 
