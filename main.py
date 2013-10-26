@@ -24,8 +24,15 @@ MAIN_PAGE_FOOTER_TEMPLATE = """\
       <div><textarea name="session_location" rows="3" cols="60"></textarea></div>
       Session Description
       <div><textarea name="session_description" rows="3" cols="60"></textarea></div>
+      Session Speaker(s)
+      <div><textarea name="speakers" rows="1" cols="60"></textarea></div>
+      Biography
+      <div><textarea name="biography" rows="3" cols="60"></textarea></div>
       Session Name
-      <div><textarea name="session_name" rows="3" cols="60"></textarea></div>
+      <div><textarea name="session_name" rows="1" cols="60"></textarea></div>
+      Date: <input type="date" name="date">
+      Start time: <input type="time" name="start_time">
+      End time: <input type="time" name="start_time">
       <div><input type="submit" value="Submit Information"></div>
     </form>
 
