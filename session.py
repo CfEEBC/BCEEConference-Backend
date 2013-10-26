@@ -22,5 +22,4 @@ class Session(ndb.Model):
 	biography = ndb.StringProperty()
 	survey = ndb.StringProperty()
 
-	
 

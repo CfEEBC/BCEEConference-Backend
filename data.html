@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+{% autoescape true %}
+<html>
+  <body>
+    {% for session in sessions %}
+        <h1>{{session['Name']}}</h1>
+        <ul>
+            <li>Description: {{session['Description']}} </li>
+            <li>Location: {{session['Location']}} </li>
+            <li>Speakers: {{session['Speakers']}} </li>
+            <li>Biography: {{session['Biography']}} </li>
+            <li>Survey: {{session['Survey']}} </li>
+            <li>Start: {{session['Start']}} </li>
+            <li>End: {{session['End']}} </li>
+        </ul>
+        <form action="/delete" method="post">
+        <input type="hidden" name="key" value="{{session['Name']}}">
+        <input type="submit" value="Delete"></form>
+    {% endfor %}
+  </body>
+</html>
+{% endautoescape %}

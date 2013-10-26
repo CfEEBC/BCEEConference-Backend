@@ -28,12 +28,6 @@ JINJA_ENVIRONMENT = jinja2.Environment(
         extensions=['jinja2.ext.autoescape'],
         autoescape=True)
 
-def delete_form_create(session_name):
-        delete_form = """<form action="/delete" method="post">
-        <input type="hidden" name="key" value="%s">
-        <input type="submit" value="Delete"></form>""" % session_name
-        return delete_form
-
 class MainHandler(webapp2.RequestHandler):
 
     def get(self):
@@ -80,19 +74,26 @@ class DataHandler(webapp2.RequestHandler):
         session = session_query.fetch(100)
         
         self.response.write('Current sessions: ' +  '<br/>')
-
+        
+        session_list = []
         for s in session:
-            
-            self.response.write('Name: ' + noNone(s.name) + '<br/>' +
-                                'Decription: ' + noNone(s.description) + '<br/>' +
-                                'Location: ' + noNone(s.location) + '<br/>' +
-                                'Speaker(s): ' + noNone(s.speakers) + '<br/>' +
-                                'Biography: ' + noNone(s.biography) + '<br/>' +
-                                'Survey Link: ' + noNone(s.survey) + '<br/>' +
-                                'Start Time: ' + noNoneDate(s.start_date) + '<br/>'
-                                'End Time: ' + noNoneDate(s.end_date) +  
-                                delete_form_create(s.name) + '<br/> <br/>' )
+            session_dict = {
+                            'Name':noNone(s.name),
+                            'Decription': noNone(s.description),
+                            'Location':noNone(s.location),
+                            'Speakers':noNone(s.speakers),
+                            'Biography':noNone(s.biography),
+                            'Survey':noNone(s.survey),
+                            'Start':noNoneDate(s.start_date),
+                            'End':noNoneDate(s.end_date)
+                            }
+            session_list.append(session_dict)
+        
+        template_values = {
+                        'sessions':session_list}
 
+        template = JINJA_ENVIRONMENT.get_template('data.html')
+        self.response.write(template.render(template_values))
 
 
 
