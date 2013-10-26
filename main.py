@@ -20,83 +20,14 @@ import datetime
 import time
 from time import mktime
 import json
+import jinja2
+import os
 
+JINJA_ENVIRONMENT = jinja2.Environment(
+        loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
+        extensions=['jinja2.ext.autoescape'],
+        autoescape=True)
 
-MAIN_PAGE_FOOTER_TEMPLATE = """
-<!DOCTYPE html>
-<html>
-<head>
-<title>BCEE Conference App</title>
-<script>
-function validateForms() {
-var location = document.forms['addSessionForm']['session_location'].value;
-var description = document.forms['addSessionForm']['session_description'].value;
-var speakers = document.forms['addSessionForm']['speakers'].value;
-var biography = document.forms['addSessionForm']['biography'].value;
-var survey_link = document.forms['addSessionForm']['survey_link'].value;
-var name = document.forms['addSessionForm']['session_name'].value;
-var date = document.forms['addSessionForm']['date'].value;
-var start_time = document.forms['addSessionForm']['start_time'].value;
-var end_time = document.forms['addSessionForm']['end_time'].value;
-
-if (location == null || location == "") {
-    alert("Please enter a location");
-    return false;
-} else if (description == null || description == "") {
-    alert("Please enter a description");
-    return false;
-} else if (speakers == null || speakers == "") {
-    alert("Please enter a list of speakers");
-    return false;
-} else if (biography == null || biography == "") {
-    alert("Please enter a biography");
-    return false;
-} else if (survey_link == null || survey_link == "") {
-    alert("Please enter a survey link");
-    return false;
-} else if (name == null || name == "") {
-    alert("Please enter a name");
-    return false;
-} else if (date == null || date == "") {
-    alert("Please specify a date");
-    return false;
-} else if (start_time == null || start_time == "") {
-    alert("Please specify a starting time");
-    return false;
-} else if (end_time == null || end_time == "") {
-    alert("Please specify an ending time");
-    return false;
-} else {
-    return true;
-}
-}
-</script>
-</head>
-
-<body>
-    <form action="/" method="post" name="addSessionForm" onsubmit="return validateForms()">
-      Session Location
-      <div><textarea name="session_location" rows="3" cols="60"></textarea></div>
-      Session Description
-      <div><textarea name="session_description" rows="3" cols="60"></textarea></div>
-      Session Speaker(s)
-      <div><textarea name="speakers" rows="1" cols="60"></textarea></div>
-      Biography
-      <div><textarea name="biography" rows="3" cols="60"></textarea></div>
-      Survey Link
-      <div><textarea name="survey_link" rows="1" cols="60"></textarea></div>
-      Session Name
-      <div><textarea name="session_name" rows="1" cols="60"></textarea></div>
-      Date: <input type="date" name="date">
-      Start time: <input type="time" name="start_time">
-      End time: <input type="time" name="end_time">
-      <div><input type="submit" value="Submit Information"></div>
-    </form>
-
-</body>
-
-</html>
-"""
 def delete_form_create(session_name):
         delete_form = """<form action="/delete" method="post">
         <input type="hidden" name="key" value="%s">
@@ -106,7 +37,10 @@ def delete_form_create(session_name):
 class MainHandler(webapp2.RequestHandler):
 
     def get(self):
-        self.response.write(MAIN_PAGE_FOOTER_TEMPLATE)
+        template_values = {}
+
+        template = JINJA_ENVIRONMENT.get_template('index.html')
+        self.response.write(template.render(template_values))
         
     def post(self):
         session_name = self.request.get("session_name")
