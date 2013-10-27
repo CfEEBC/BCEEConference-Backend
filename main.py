@@ -28,13 +28,16 @@ secret = 'ASPOIUlsf;asf[gjdksl'
 hashed_password = "613f7198c3ecc9ff2c078de393c2b140"
 cookie_hash = "admin|613f7198c3ecc9ff2c078de393c2b140"
 
+
+
 JINJA_ENVIRONMENT = jinja2.Environment(
-    loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
-    extensions=['jinja2.ext.autoescape'],
-    autoescape=True)
+        loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
+        extensions=['jinja2.ext.autoescape'],
+        autoescape=True)
 
 def check_cookies(cookies):
     return (("admin" in cookies) and cookies["admin"] == cookie_hash)
+
 
 class MainHandler(webapp2.RequestHandler):
 
@@ -47,13 +50,14 @@ class MainHandler(webapp2.RequestHandler):
             template = JINJA_ENVIRONMENT.get_template('index.html')
             self.response.write(template.render(template_values))
         else:                                                           #redirect
+            
             self.redirect('/')
 
+        
     def post(self):
         addSession(self)
 
-def addSession(caller):
-    #Form is verified on client
+def addSession(caller):                                               #Form is verified on client
     session_name = caller.request.get("session_name")
     date = caller.request.get("date")
     start_timeval = caller.request.get("start_time")
@@ -69,6 +73,7 @@ def addSession(caller):
     session_speakers=caller.request.get("speakers")
     session_biography=caller.request.get("biography")
     survey_link=caller.request.get("survey_link")
+
     
     session1 = Session(name=session_name,
                        description=session_description,
@@ -89,32 +94,32 @@ class DataHandler(webapp2.RequestHandler):
 
     def get(self):
         cookies = self.request.cookies
-        
         if check_cookies(cookies):
+            
             session_query = Session.query(ancestor=ndb.Key('Type', 'Session'))
             session = session_query.fetch(100)
-            
+        
             self.response.write('Current sessions: ' +  '<br/>')
-            
+        
             session_list = []
 
             #Create list of dictionaries to pass to template
 
             for s in session:                                                   
                 session_dict = {
-                    'Name':noNone(s.name),
-                    'Description': noNone(s.description),
-                    'Location':noNone(s.location),
-                    'Speakers':noNone(s.speakers),
-                    'Biography':noNone(s.biography),
-                    'Survey':noNone(s.survey),
-                    'Start':noNoneDate(s.start_date),
-                    'End':noNoneDate(s.end_date)
-                }
+                            'Name':noNone(s.name),
+                            'Description': noNone(s.description),
+                            'Location':noNone(s.location),
+                            'Speakers':noNone(s.speakers),
+                            'Biography':noNone(s.biography),
+                            'Survey':noNone(s.survey),
+                            'Start':noNoneDate(s.start_date),
+                            'End':noNoneDate(s.end_date)
+                            }
                 session_list.append(session_dict)
-                
+        
             template_values = {
-                'sessions':session_list}
+                        'sessions':session_list}
 
             template = JINJA_ENVIRONMENT.get_template('data.html')
             self.response.write(template.render(template_values))
@@ -122,7 +127,11 @@ class DataHandler(webapp2.RequestHandler):
         else:
             self.redirect('/')
 
+
+
 class DeleteHandler(webapp2.RequestHandler):
+    
+
     def post(self):
         key = ndb.Key('Type', 'Session', 'Name', self.request.get("key"))
         session_query = Session.query(ancestor=key)
@@ -132,6 +141,7 @@ class DeleteHandler(webapp2.RequestHandler):
         for s in sessions:
             self.response.write('Deleted: ' + s.name + '<br/>')
             s.key.delete()
+
 
 def noNone(input):
     if input is None:
@@ -145,26 +155,23 @@ def noNoneDate(date):
     else:
         return date.isoformat()
 
+
 class jsonHandler(webapp2.RequestHandler):
 
     def get(self):
-        key = ndb.Key('Type', 'Session')
-        session_query = Session.query(ancestor=key)
+      key = ndb.Key('Type', 'Session')
+      session_query = Session.query(ancestor=key)
         
-        sessions = session_query.fetch(100)
-        string_json = "["
-        for s in sessions:
-            string_json = string_json + json.dumps({
-                "session_name" : s.name, 
-                "location" : s.location,
-                "stime" : str(s.start_date), 
-                "etime" : str(s.end_date),
-                "description" : s.description, 
-                "speakers" : s.speakers,
-                "biography" : s.biography, 
-                "survey_link" : s.survey }) + ","
+      sessions = session_query.fetch(100)
+      string_json = "["
+      for s in sessions:
+        string_json = string_json + json.dumps({"session_name" : s.name, "location" : s.location,
+                    "stime" : str(s.start_date), "etime" : str(s.end_date),
+                    "description" : s.description, "speakers" : s.speakers,
+                    "biography" : s.biography, "survey_link" : s.survey }) + ","
 
       string_json = string_json[0:-1] + "]"
+
       self.response.write(string_json)
 
 
@@ -181,12 +188,13 @@ class Login(webapp2.RequestHandler):
     def post(self):
         
         password_log = self.request.get('password')
+
         
         if hmac.new(secret,password_log).hexdigest() == hashed_password :
             cookie_val = make_secure_val("admin",password_log)
             self.response.headers.add_header(
-                'Set-Cookie',
-                str('%s=%s; Path=/' % ("admin", cookie_val)))
+            'Set-Cookie',
+            str('%s=%s; Path=/' % ("admin", cookie_val)))
             self.redirect('/add')
         else:
             msg = 'Invalid login'
