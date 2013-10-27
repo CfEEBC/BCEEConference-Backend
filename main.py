@@ -144,8 +144,6 @@ class DataHandler(webapp2.RequestHandler):
             template = JINJA_ENVIRONMENT.get_template('data.html')
             self.response.write(template.render(template_values))
 
-
-
         else:
             self.redirect('/')
 
@@ -153,7 +151,6 @@ class DataHandler(webapp2.RequestHandler):
 
 class DeleteHandler(webapp2.RequestHandler):
     
-
     def post(self):
         update_time(KEY_TIME_CONSTANT)
         key = ndb.Key('Type', 'Session', 'Name', self.request.get("key"))
@@ -164,7 +161,6 @@ class DeleteHandler(webapp2.RequestHandler):
         for s in sessions:
             self.response.write('Deleted: ' + s.name + '<br/>')
             s.key.delete()
-
 
 def noNone(input):
     if input is None:
@@ -178,13 +174,11 @@ def noNoneDate(date):
     else:
         return date.isoformat()
 
-
 class jsonHandler(webapp2.RequestHandler):
 
     def get(self):
         key = ndb.Key('Type', 'Session')
         session_query = Session.query(ancestor=key)
-    
     
         sessions = session_query.fetch(100)
         sessions_list = []
@@ -201,7 +195,6 @@ class jsonHandler(webapp2.RequestHandler):
 
         self.response.write(json.dumps(sessions_list))
 
-
 def make_secure_val(val, password_):
     return '%s|%s' % (val, hmac.new(secret, password_).hexdigest())
 
@@ -211,12 +204,9 @@ class Login(webapp2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('login-form.html')
         self.response.write(template.render(template_values))
         
-
     def post(self):
-        
         password_log = self.request.get('password')
 
-        
         if hmac.new(secret,password_log).hexdigest() == hashed_password :
             cookie_val = make_secure_val("admin",password_log)
             self.response.headers.add_header(
@@ -261,8 +251,12 @@ class EditProcessor(webapp2.RequestHandler):
         
         addSession(self)
         
-        
-        
+class MetaHandler(webapp2.RequestHandler):
+    def get(self):
+        return json.dumps({
+            'last_update':get_time(KEY_TIME_CONSTANT)
+            })
+
 app = webapp2.WSGIApplication([
     ('/add', MainHandler),
     ('/data', DataHandler),
@@ -270,6 +264,7 @@ app = webapp2.WSGIApplication([
     ('/machine' , jsonHandler),
     ('/edit', EditHandler),
     ('/editProcessor', EditProcessor),
+    ('/machineMeta', MetaHandler),
     ('/' , Login)
 ], debug=True)
 
