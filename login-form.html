@@ -2,7 +2,8 @@
 
 <html>
   <head>
-    <title>Login</title>
+    <title>Login</title>    
+    <link rel="stylesheet" type="text/css" href="/stylesheets/mainstyle.css" />
     <style type="text/css">
       .label {text-align: right}
       .error {color: red}
@@ -11,14 +12,16 @@
   </head>
 
   <body>
-    <h2>Login</h2>
+    <div class="fieldSet">
+    <fieldset>
+    <legend> Login</legend>
     <form method="post">
       <table>
 
 
         <tr>
           <td class="label">
-            Password
+            Password:
           </td>
           <td>
             <input type="password" name="password" value="">
@@ -32,6 +35,8 @@
 
       <input type="submit">
     </form>
+    </div>
+        </fieldset>
   </body>
 
 </html>
