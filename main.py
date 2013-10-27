@@ -46,6 +46,7 @@ class MainHandler(webapp2.RequestHandler):
             template = JINJA_ENVIRONMENT.get_template('index.html')
             self.response.write(template.render(template_values))
         else:
+            
             self.redirect('/')
 
         
@@ -77,9 +78,9 @@ class MainHandler(webapp2.RequestHandler):
                            biography=session_biography,
                            survey=survey_link)
         session1.put()
-	
+
         template_values = {}
-	template = JINJA_ENVIRONMENT.get_template('confirm.html')
+        template = JINJA_ENVIRONMENT.get_template('confirm.html')
         self.response.write(template.render(template_values))
        
 
