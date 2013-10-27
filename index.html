@@ -54,23 +54,24 @@ if (location == null || location == "") {
 </head>
 
 <body>
-    <form action="/" method="post" name="addSessionForm" onsubmit="return validateForms()">
-      Session Location
-      <div><textarea name="session_location" rows="3" cols="60"></textarea></div>
-      Session Description
-      <div><textarea name="session_description" rows="3" cols="60"></textarea></div>
-      Session Speaker(s)
-      <div><textarea name="speakers" rows="1" cols="60"></textarea></div>
-      Biography
-      <div><textarea name="biography" rows="3" cols="60"></textarea></div>
-      Survey Link
-      <div><textarea name="survey_link" rows="1" cols="60"></textarea></div>
-      Session Name
-      <div><textarea name="session_name" rows="1" cols="60"></textarea></div>
-      Date: <input type="date" name="date">
-      Start time: <input type="time" name="start_time">
-      End time: <input type="time" name="end_time">
-      <div><input type="submit" value="Submit Information"></div>
+    <form name="addSessionForm" method="post" onsubmit="return validateForms()"
+        action="{{submit_target | default('/')}}"  >
+        Session Location
+        <div><textarea name="session_location" rows="3" cols="60">{{prefill_location | default('')}}</textarea></div>
+        Session Description
+        <div><textarea name="session_description" rows="3" cols="60">{{prefill_description | default('')}}</textarea></div>
+        Session Speaker(s)
+        <div><textarea name="speakers" rows="1" cols="60">{{prefill_speakers | default('')}}</textarea></div>
+        Biography
+        <div><textarea name="biography" rows="3" cols="60">{{prefill_biography | default('')}}</textarea></div>
+        Survey Link
+        <div><textarea name="survey_link" rows="1" cols="60">{{prefill_survey | default('')}}</textarea></div>
+        Session Name
+        <div><textarea name="session_name" rows="1" cols="60">{{prefill_name | default('')}}</textarea></div>
+        Date: <input type="date" name="date">
+        Start time: <input type="time" name="start_time">
+        End time: <input type="time" name="end_time">
+        <div><input type="submit" value="Submit Information"></div>
     </form>
 
 </body>
