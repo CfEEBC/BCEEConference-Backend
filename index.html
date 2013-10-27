@@ -57,40 +57,39 @@ if (location == null || location == "") {
 </head>
 
 <body>
-
-    <form action="/" method="post" name="addSessionForm"
-    onsubmit="return validateForms()">
+    <form name="addSessionForm" method="post" onsubmit="return validateForms()"
+        action="{{submit_target | default('/')}}">
     <div class="fieldSet">
     <fieldset>
     <legend> Session Information </legend>
       <p>
       Session Location
-      <div><textarea name="session_location" rows="3" cols="60"></textarea></div>
+      <div><textarea name="session_location" rows="3" cols="60">{{prefill_location | default('')}}</textarea></div>
       </p>
       
       <p>
       Session Description
-      <div><textarea name="session_description" rows="3" cols="60"></textarea></div>
+      <div><textarea name="session_description" rows="3" cols="60">{{prefill_description | default('')}}</textarea></div>
       </p>
 
       <p>
       Session Speaker(s)
-      <div><textarea name="speakers" rows="1" cols="60"></textarea></div>
+      <div><textarea name="speakers" rows="1" cols="60">{{prefill_speakers | default('')}}</textarea></div>
       </p>
 
       <p>
       Biography
-      <div><textarea name="biography" rows="3" cols="60"></textarea></div>
+      <div><textarea name="biography" rows="3" cols="60">{{prefill_biography | default('')}}</textarea></div>
       </p>
 
       <p>
       Survey Link
-      <div><textarea name="survey_link" rows="1" cols="60"></textarea></div>
+      <div><textarea name="survey_link" rows="1" cols="60">{{prefill_survey | default('')}}</textarea></div>
       </p>
 
       <p>
       Session Name
-      <div><textarea name="session_name" rows="1" cols="60"></textarea></div>
+      <div><textarea name="session_name" rows="1" cols="60">{{prefill_name | default('')}}</textarea></div>
       </p>
 
       Date: <input type="date" name="date">
@@ -111,4 +110,5 @@ if (location == null || location == "") {
 </body>
 
 </html>
- {% endautoescape %}
+
+{% endautoescape %}
