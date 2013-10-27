@@ -51,7 +51,7 @@ def get_time(key_time):
     time_query = updateTime.query(ancestor=key_time)
     time_fetch = time_query.fetch(1)
     if len(time_fetch) > 0:
-        return time_fetch[0]
+        return time_fetch[0].last_updated
     else:
         update_time(key_time)
         return get_time(key_time)
