@@ -32,9 +32,9 @@ cookie_hash = "admin|613f7198c3ecc9ff2c078de393c2b140"
 KEY_TIME_CONSTANT = ndb.Key("Time", "Server_Update")
 
 JINJA_ENVIRONMENT = jinja2.Environment(
-        loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
-        extensions=['jinja2.ext.autoescape'],
-        autoescape=True)
+    loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
+    extensions=['jinja2.ext.autoescape'],
+    autoescape=True)
 
 def check_cookies(cookies):
     return (("admin" in cookies) and cookies["admin"] == cookie_hash)
@@ -44,8 +44,8 @@ def update_time(key_time):
     time_fetch = time_query.fetch(1)
     if len(time_fetch) > 0:
         time_fetch[0].key.delete()
-    new_time = updateTime(parent=key_time)
-    new_time.put() 
+        new_time = updateTime(parent=key_time)
+        new_time.put() 
 
 def get_time(key_time):
     time_query = updateTime.query(ancestor=key_time)
@@ -117,26 +117,26 @@ class DataHandler(webapp2.RequestHandler):
             
             session_query = Session.query(ancestor=ndb.Key('Type', 'Session'))
             session = session_query.fetch(100)
-        
+            
             self.response.write('Current sessions: ' +  '<br/>')
-        
+            
             session_list = []
 
             #Create list of dictionaries to pass to template
 
             for s in session:                                                   
                 session_dict = {
-                            'Name':noNone(s.name),
-                            'Description': noNone(s.description),
-                            'Location':noNone(s.location),
-                            'Speakers':noNone(s.speakers),
-                            'Biography':noNone(s.biography),
-                            'Survey':noNone(s.survey),
-                            'Start':noNoneDate(s.start_date),
-                            'End':noNoneDate(s.end_date)
-                            }
+                    'Name':noNone(s.name),
+                    'Description': noNone(s.description),
+                    'Location':noNone(s.location),
+                    'Speakers':noNone(s.speakers),
+                    'Biography':noNone(s.biography),
+                    'Survey':noNone(s.survey),
+                    'Start':noNoneDate(s.start_date),
+                    'End':noNoneDate(s.end_date)
+                }
                 session_list.append(session_dict)
-        
+                
             template_values = {
                 'sessions':session_list,
                 'last_update':get_time(KEY_TIME_CONSTANT)}
@@ -179,7 +179,7 @@ class jsonHandler(webapp2.RequestHandler):
     def get(self):
         key = ndb.Key('Type', 'Session')
         session_query = Session.query(ancestor=key)
-    
+        
         sessions = session_query.fetch(100)
         sessions_list = []
         for s in sessions:
@@ -210,8 +210,8 @@ class Login(webapp2.RequestHandler):
         if hmac.new(secret,password_log).hexdigest() == hashed_password :
             cookie_val = make_secure_val("admin",password_log)
             self.response.headers.add_header(
-            'Set-Cookie',
-            str('%s=%s; Path=/' % ("admin", cookie_val)))
+                'Set-Cookie',
+                str('%s=%s; Path=/' % ("admin", cookie_val)))
             self.redirect('/add')
         else:
             msg = 'Invalid login'
@@ -253,9 +253,9 @@ class EditProcessor(webapp2.RequestHandler):
         
 class MetaHandler(webapp2.RequestHandler):
     def get(self):
-        return json.dumps({
-            'last_update':get_time(KEY_TIME_CONSTANT)
-            })
+        self.response.write(json.dumps({
+            'last_update':str(get_time(KEY_TIME_CONSTANT))
+        }))
 
 app = webapp2.WSGIApplication([
     ('/add', MainHandler),
