@@ -22,6 +22,9 @@ from time import mktime
 import json
 import jinja2
 import os
+import hmac
+
+secret = 'ASPOIUlsf;asf[gjdksl'
 
 JINJA_ENVIRONMENT = jinja2.Environment(
         loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -31,10 +34,16 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 class MainHandler(webapp2.RequestHandler):
 
     def get(self):
-        template_values = {}
+        cookies = self.request.cookies
 
-        template = JINJA_ENVIRONMENT.get_template('index.html')
-        self.response.write(template.render(template_values))
+        if (("admin" in cookies) and cookies["admin"] == "password|613f7198c3ecc9ff2c078de393c2b140"):
+            template_values = {}
+
+            template = JINJA_ENVIRONMENT.get_template('index.html')
+            self.response.write(template.render(template_values))
+        else:
+            self.redirect('/')
+
         
     def post(self):
         session_name = self.request.get("session_name")
@@ -142,16 +151,41 @@ class jsonHandler(webapp2.RequestHandler):
 
       self.response.write(string_json)
 
+hashed_password = "password"   # CHANGE THIS LATER __________________________^^^^^^^^^^^^**********************
+def make_secure_val(val):
+    return '%s|%s' % (val, hmac.new(secret, val).hexdigest())
 
+class Login(webapp2.RequestHandler):
+    def get(self):
+        template_values = {}
+        template = JINJA_ENVIRONMENT.get_template('login-form.html')
+        self.response.write(template.render(template_values))
+        
+
+    def post(self):
+        
+        password = self.request.get('password')
+
+        
+        if password == hashed_password :
+            cookie_val = make_secure_val(password)
+            self.response.headers.add_header(
+            'Set-Cookie',
+            str('%s=%s; Path=/' % ("admin", cookie_val)))
+            self.redirect('/add')
+        else:
+            msg = 'Invalid login'
+            self.render('login-form.html', error = msg)
 
 
 
 
 app = webapp2.WSGIApplication([
-    ('/', MainHandler),
+    ('/add', MainHandler),
     ('/data', DataHandler),
     ('/delete', DeleteHandler),
-    ('/machine' , jsonHandler)
+    ('/machine' , jsonHandler),
+    ('/' , Login)
 ], debug=True)
 
 
