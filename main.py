@@ -25,8 +25,9 @@ import os
 import hmac
 
 secret = 'ASPOIUlsf;asf[gjdksl'
-password = "password"
-hashed_password = hmac.new(secret, "password").hexdigest()
+
+hashed_password = "613f7198c3ecc9ff2c078de393c2b140"
+cookie_hash = "admin|613f7198c3ecc9ff2c078de393c2b140"
 
 
 
@@ -41,12 +42,12 @@ class MainHandler(webapp2.RequestHandler):
         cookies = self.request.cookies
 
         if (("admin" in cookies) and 
-            cookies["admin"] == make_secure_val("admin", password)):
+            cookies["admin"] == cookie_hash):  #check sign-in
             template_values = {}
 
             template = JINJA_ENVIRONMENT.get_template('index.html')
             self.response.write(template.render(template_values))
-        else:
+        else:                                                           #redirect
             
             self.redirect('/')
 
@@ -54,7 +55,7 @@ class MainHandler(webapp2.RequestHandler):
     def post(self):
         addSession(self)
 
-def addSession(caller):
+def addSession(caller):                                               #Form is verified on client
     session_name = caller.request.get("session_name")
     date = caller.request.get("date")
     start_timeval = caller.request.get("start_time")
@@ -91,7 +92,7 @@ class DataHandler(webapp2.RequestHandler):
 
     def get(self):
         cookies = self.request.cookies
-        if (("admin" in cookies) and cookies["admin"] == make_secure_val("admin", password)):
+        if (("admin" in cookies) and cookies["admin"] == cookie_hash):
             
             session_query = Session.query(ancestor=ndb.Key('Type', 'Session'))
             session = session_query.fetch(100)
@@ -169,8 +170,8 @@ class jsonHandler(webapp2.RequestHandler):
       self.response.write(string_json)
 
 
-def make_secure_val(val, password):
-    return '%s|%s' % (val, hmac.new(secret, val).hexdigest())
+def make_secure_val(val, password_):
+    return '%s|%s' % (val, hmac.new(secret, password_).hexdigest())
 
 class Login(webapp2.RequestHandler):
     def get(self):
