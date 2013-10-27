@@ -73,7 +73,11 @@ class MainHandler(webapp2.RequestHandler):
                            biography=session_biography,
                            survey=survey_link)
         session1.put()
-        self.response.write('stored!')
+	
+        template_values = {}
+	template = JINJA_ENVIRONMENT.get_template('confirm.html')
+        self.response.write(template.render(template_values))
+       
 
 class DataHandler(webapp2.RequestHandler):
 
