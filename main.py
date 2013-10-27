@@ -40,7 +40,8 @@ class MainHandler(webapp2.RequestHandler):
     def get(self):
         cookies = self.request.cookies
 
-        if (("admin" in cookies) and cookies["admin"] == make_secure_val("admin", password)):
+        if (("admin" in cookies) and 
+            cookies["admin"] == make_secure_val("admin", password)):
             template_values = {}
 
             template = JINJA_ENVIRONMENT.get_template('index.html')
@@ -88,7 +89,6 @@ class DataHandler(webapp2.RequestHandler):
     def get(self):
         cookies = self.request.cookies
         if (("admin" in cookies) and cookies["admin"] == make_secure_val("admin", password)):
-            
             
             session_query = Session.query(ancestor=ndb.Key('Type', 'Session'))
             session = session_query.fetch(100)
@@ -193,7 +193,26 @@ class Login(webapp2.RequestHandler):
             template = JINJA_ENVIRONMENT.get_template('login-form.html')
             self.response.write(template.render(template_values))
 
-
+class EditHandler(webapp2.RequestHandler):
+    def post(self):
+        session_name = self.request.get('key')
+        key = ndb.Key('Type', 'Session', 'Name', session_name)
+        
+        session_query = Session.query(ancestor=key)
+        session = (session_query.fetch(1))[0]
+        
+        template_values = {
+            'submit_target':'/editProcessor',
+            'prefill_location':session.location,
+            'prefill_description':session.description,
+            'prefill_speakers':session.speakers,
+            'prefill_biography':session.biography,
+            'prefill_survey':session.survey,
+            'prefill_name':session.name
+        }
+        
+        template = JINJA_ENVIRONMENT.get_template('index.html')
+        self.response.write(template.render(template_values))
 
 
 app = webapp2.WSGIApplication([
@@ -201,6 +220,7 @@ app = webapp2.WSGIApplication([
     ('/data', DataHandler),
     ('/delete', DeleteHandler),
     ('/machine' , jsonHandler),
+    ('/edit', EditHandler),
     ('/' , Login)
 ], debug=True)
 

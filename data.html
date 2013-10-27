@@ -17,22 +17,9 @@
             <input type="hidden" name="key" value="{{session['Name']}}">
             <input type="submit" value="Delete">
         </form>
-        <form action="/" method="post">
-            <input type="hidden" name="name" value="{{session['Name']}}">
-            <input type="hidden" name="description" 
-                value="{{session['Description']}}">
-            <input type="hidden" name="location" 
-                value="{{session['Location']}}">
-            <input type="hidden" name="speakers"   
-                value="{session['Speakers']}}">
-            <input type="hidden" name="biography" 
-                value="{{session['Biography']}}">
-            <input type="hidden" name="survey" 
-                value="{{session['Survey']}}">
-            <input type="hidden" name="start" 
-                value="{{session['Start']}}">
-            <input type="hidden" name="end" value="{{session['End']}}">
-            <input type="submit" value="Delete">
+        <form action="/edit" method="post">
+            <input type="hidden" name="key" value="{{session['Name']}}">
+            <input type="submit" value="Edit">
         </form>
     {% endfor %}
   </body>
