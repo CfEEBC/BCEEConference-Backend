@@ -25,6 +25,10 @@ import os
 import hmac
 
 secret = 'ASPOIUlsf;asf[gjdksl'
+password = "password"
+hashed_password = hmac.new(secret, "password").hexdigest()
+
+
 
 JINJA_ENVIRONMENT = jinja2.Environment(
         loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -36,7 +40,7 @@ class MainHandler(webapp2.RequestHandler):
     def get(self):
         cookies = self.request.cookies
 
-        if (("admin" in cookies) and cookies["admin"] == "password|613f7198c3ecc9ff2c078de393c2b140"):
+        if (("admin" in cookies) and cookies["admin"] == make_secure_val("admin", password)):
             template_values = {}
 
             template = JINJA_ENVIRONMENT.get_template('index.html')
@@ -78,14 +82,18 @@ class MainHandler(webapp2.RequestHandler):
 class DataHandler(webapp2.RequestHandler):
 
     def get(self):
-        session_query = Session.query(ancestor=ndb.Key('Type', 'Session'))
-        session = session_query.fetch(100)
+        cookies = self.request.cookies
+        if (("admin" in cookies) and cookies["admin"] == make_secure_val("admin", password)):
+            
+            
+            session_query = Session.query(ancestor=ndb.Key('Type', 'Session'))
+            session = session_query.fetch(100)
         
-        self.response.write('Current sessions: ' +  '<br/>')
+            self.response.write('Current sessions: ' +  '<br/>')
         
-        session_list = []
-        for s in session:
-            session_dict = {
+            session_list = []
+            for s in session:
+                session_dict = {
                             'Name':noNone(s.name),
                             'Decription': noNone(s.description),
                             'Location':noNone(s.location),
@@ -95,13 +103,16 @@ class DataHandler(webapp2.RequestHandler):
                             'Start':noNoneDate(s.start_date),
                             'End':noNoneDate(s.end_date)
                             }
-            session_list.append(session_dict)
+                session_list.append(session_dict)
         
-        template_values = {
+            template_values = {
                         'sessions':session_list}
 
-        template = JINJA_ENVIRONMENT.get_template('data.html')
-        self.response.write(template.render(template_values))
+            template = JINJA_ENVIRONMENT.get_template('data.html')
+            self.response.write(template.render(template_values))
+
+        else:
+            self.redirect('/')
 
 
 
@@ -150,8 +161,8 @@ class jsonHandler(webapp2.RequestHandler):
 
       self.response.write(string_json)
 
-hashed_password = "password"   # CHANGE THIS LATER __________________________^^^^^^^^^^^^**********************
-def make_secure_val(val):
+
+def make_secure_val(val, password):
     return '%s|%s' % (val, hmac.new(secret, val).hexdigest())
 
 class Login(webapp2.RequestHandler):
@@ -163,18 +174,20 @@ class Login(webapp2.RequestHandler):
 
     def post(self):
         
-        password = self.request.get('password')
+        password_log = self.request.get('password')
 
         
-        if password == hashed_password :
-            cookie_val = make_secure_val(password)
+        if hmac.new(secret,password_log).hexdigest() == hashed_password :
+            cookie_val = make_secure_val("admin",password_log)
             self.response.headers.add_header(
             'Set-Cookie',
             str('%s=%s; Path=/' % ("admin", cookie_val)))
             self.redirect('/add')
         else:
             msg = 'Invalid login'
-            self.render('login-form.html', error = msg)
+            template_values = {"error" : msg}
+            template = JINJA_ENVIRONMENT.get_template('login-form.html')
+            self.response.write(template.render(template_values))
 
 
 
