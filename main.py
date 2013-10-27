@@ -117,9 +117,6 @@ class DataHandler(webapp2.RequestHandler):
             
             session_query = Session.query(ancestor=ndb.Key('Type', 'Session'))
             session = session_query.fetch(100)
-            
-            self.response.write('Current sessions: ' +  '<br/>')
-            
             session_list = []
 
             #Create list of dictionaries to pass to template

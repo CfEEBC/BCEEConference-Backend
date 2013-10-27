@@ -2,6 +2,7 @@
 {% autoescape true %}
 <html>
 <head>
+<link rel="stylesheet" type="text/css" href="/stylesheets/mainstyle.css" />
 <style> 
 .border
 {
@@ -41,7 +42,9 @@ form
 </style>
 </head>
   <body>
-    
+    <div class="fieldSet">
+    <fieldset>
+    <legend>Current Sessions</legend>
     {% for session in sessions %}
     <div class="border">
         <h1>{{session['Name']}}</h1>
@@ -72,7 +75,8 @@ form
     {% endfor %}
     
     Last updated: {{last_update}}
-    
+      </div>
+        </fieldset>
   </body>
 </html>
 {% endautoescape %}
