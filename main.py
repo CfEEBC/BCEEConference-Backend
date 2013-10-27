@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 #
-# Copyright 2007 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -103,7 +102,10 @@ class DataHandler(webapp2.RequestHandler):
             self.response.write('Current sessions: ' +  '<br/>')
         
             session_list = []
-            for s in session:
+
+            #Create list of dictionaries to pass to template
+
+            for s in session:                                                   
                 session_dict = {
                             'Name':noNone(s.name),
                             'Description': noNone(s.description),

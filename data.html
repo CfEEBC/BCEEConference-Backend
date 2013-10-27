@@ -8,8 +8,10 @@
 border:2px solid #a1a1a1;
 padding:30px 70px; 
 background:#dddddd;
-width:300px;
+width:70%;
 border-radius:25px;
+margin:auto;
+
 }
 
 
@@ -19,13 +21,21 @@ border-radius:25px;
 position:absolute;
 left:150px;
 
-width:300px;
+width:70%;
+margin:auto;
+
+}
+
+.text
+{
+    margin: auto;
 
 }
 
 form
 {
-    float:left;
+   display: inline; 
+
 }
 
 </style>
@@ -35,6 +45,7 @@ form
     {% for session in sessions %}
     <div class="border">
         <h1>{{session['Name']}}</h1>
+        <div class="text">
         <ul>
             <li>Description: {{session['Description']}} </li>
             <li>Location: {{session['Location']}} </li>
@@ -44,6 +55,7 @@ form
             <li>Start: {{session['Start']}} </li>
             <li>End: {{session['End']}} </li>
         </ul>
+    </div>
         <div class="right">
         <form action="/delete" method="post">
             <input type="hidden" name="key" value="{{session['Name']}}">
