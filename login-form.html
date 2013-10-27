@@ -13,30 +13,29 @@
 
   <body>
     <div class="fieldSet">
-    <fieldset>
-    <legend> Login</legend>
-    <form method="post">
-      <table>
+      <fieldset>
+        <legend>Login</legend>
+        <form method="post">
+          <table>
+            <tr>
+              <td class="label">
+                Password:
+              </td>
+              <td>
+                <input type="password" name="password" value="">
+              </td>
+            </tr>
+          </table>
 
+          <div class="error">
+            {{error}}
+          </div>
 
-        <tr>
-          <td class="label">
-            Password:
-          </td>
-          <td>
-            <input type="password" name="password" value="">
-          </td>
-        </tr>
-      </table>
-
-      <div class="error">
-        {{error}}
-      </div>
-
-      <input type="submit">
-    </form>
+          <input type="submit">
+        </form>
+        
+      </fieldset>
     </div>
-        </fieldset>
   </body>
 
 </html>

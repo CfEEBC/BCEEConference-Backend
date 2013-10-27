@@ -1,34 +1,33 @@
 <!DOCTYPE html>
 {% autoescape true %}
 <html>
-<head>
-<title>BCEE Conference App</title>
-<link rel="stylesheet" type="text/css" href="/stylesheets/mainstyle.css" />
-</head>
+  <head>
+    <title>BCEE Conference App</title>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/mainstyle.css" />
+  </head>
 
-<body>
+  <body>
 
     <form action="/" method="post" name="addSessionForm"
-    onsubmit="return validateForms()">
-    <div class="fieldSet">
-    <fieldset>
-    <legend> Confirmation </legend>
-      <p>
-      Your Data has been stored.
-      </p>
-
-      </div>
+          onsubmit="return validateForms()">
+      <div class="fieldSet">
+        <fieldset>
+          <legend> Confirmation </legend>
+          <p>
+            Your Data has been stored.
+          </p>
         </fieldset>
+      </div>
     </form>
 
-</body>
+  </body>
 
-    <form action="/data" class="centerelement">
-      <input type="submit" class="button" value="View Sessions">
-    </form>
-    <form action="/add" class="centerelement">
-      <input type="submit" class="button" value="Add a new Session">
-    </form>
+  <form action="/data" class="centerelement">
+    <input type="submit" class="button" value="View Sessions">
+  </form>
+  <form action="/add" class="centerelement">
+    <input type="submit" class="button" value="Add a new Session">
+  </form>
 
 </html>
- {% endautoescape %}
+{% endautoescape %}

@@ -44,8 +44,8 @@ def update_time(key_time):
     time_fetch = time_query.fetch(1)
     if len(time_fetch) > 0:
         time_fetch[0].key.delete()
-    new_time = updateTime(parent=key_time)
-    new_time.put() 
+        new_time = updateTime(parent=key_time)
+        new_time.put() 
 
 def get_time(key_time):
     time_query = updateTime.query(ancestor=key_time)

@@ -1,110 +1,110 @@
 <!DOCTYPE html>
 {% autoescape true %}
 <html>
-<head>
-<title>BCEE Conference App</title>
-<link rel="stylesheet" type="text/css" href="/stylesheets/mainstyle.css" />
-<script>
-function validateForms() {
-var location = document.forms['addSessionForm']['session_location'].value;
-var description = document.forms['addSessionForm']['session_description'].value;
-var speakers = document.forms['addSessionForm']['speakers'].value;
-var biography = document.forms['addSessionForm']['biography'].value;
-var survey_link = document.forms['addSessionForm']['survey_link'].value;
-var name = document.forms['addSessionForm']['session_name'].value;
-var date = document.forms['addSessionForm']['date'].value;
-var start_time = document.forms['addSessionForm']['start_time'].value;
-var end_time = document.forms['addSessionForm']['end_time'].value;
+  <head>
+    <title>BCEE Conference App</title>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/mainstyle.css" />
+    <script>
+      function validateForms() {
+      var location = document.forms['addSessionForm']['session_location'].value;
+      var description = document.forms['addSessionForm']['session_description'].value;
+      var speakers = document.forms['addSessionForm']['speakers'].value;
+      var biography = document.forms['addSessionForm']['biography'].value;
+      var survey_link = document.forms['addSessionForm']['survey_link'].value;
+      var name = document.forms['addSessionForm']['session_name'].value;
+      var date = document.forms['addSessionForm']['date'].value;
+      var start_time = document.forms['addSessionForm']['start_time'].value;
+      var end_time = document.forms['addSessionForm']['end_time'].value;
 
-if (location == null || location == "") {
-    alert("Please enter a location");
-    return false;
-} else if (description == null || description == "") {
-    alert("Please enter a description");
-    return false;
-} else if (speakers == null || speakers == "") {
-    alert("Please enter a list of speakers");
-    return false;
-} else if (biography == null || biography == "") {
-    alert("Please enter a biography");
-    return false;
-} else if (survey_link == null || survey_link == "") {
-    alert("Please enter a survey link");
-    return false;
-} else if (name == null || name == "") {
-    alert("Please enter a name");
-    return false;
-} else if (date == null || date == "") {
-    alert("Please specify a date");
-    return false;
-} else if (start_time == null || start_time == "") {
-    alert("Please specify a starting time");
-    return false;
-} else if (end_time == null || end_time == "") {
-    alert("Please specify an ending time");
-    return false;
-} else if (location.length > 500 || description.length > 500 || speakers.length > 500 ||
-            biography.length > 500 || survey_link.length > 500 || name.length > 500){
-    alert("Please limit all fields to 500 characters");
-    return false;
-} else {
-    return true;
-}
+      if (location == null || location == "") {
+      alert("Please enter a location");
+      return false;
+      } else if (description == null || description == "") {
+      alert("Please enter a description");
+      return false;
+      } else if (speakers == null || speakers == "") {
+      alert("Please enter a list of speakers");
+      return false;
+      } else if (biography == null || biography == "") {
+      alert("Please enter a biography");
+      return false;
+      } else if (survey_link == null || survey_link == "") {
+      alert("Please enter a survey link");
+      return false;
+      } else if (name == null || name == "") {
+      alert("Please enter a name");
+      return false;
+      } else if (date == null || date == "") {
+      alert("Please specify a date");
+      return false;
+      } else if (start_time == null || start_time == "") {
+      alert("Please specify a starting time");
+      return false;
+      } else if (end_time == null || end_time == "") {
+      alert("Please specify an ending time");
+      return false;
+      } else if (location.length > 500 || description.length > 500 || speakers.length > 500 ||
+      biography.length > 500 || survey_link.length > 500 || name.length > 500){
+      alert("Please limit all fields to 500 characters");
+      return false;
+      } else {
+      return true;
+      }
 
-}
-</script>
+      }
+    </script>
 
-</head>
+  </head>
 
-<body>
+  <body>
     <form name="addSessionForm" method="post" onsubmit="return validateForms()"
-        action="{{submit_target | default('/add')}}">
-    <div class="fieldSet">
-    <fieldset>
-    <legend> Session Information </legend>
-      <p>
-      Session Location
-      <div><textarea name="session_location" rows="3" cols="60">{{prefill_location | default('')}}</textarea></div>
-      </p>
-      
-      <p>
-      Session Description
-      <div><textarea name="session_description" rows="3" cols="60">{{prefill_description | default('')}}</textarea></div>
-      </p>
+          action="{{submit_target | default('/add')}}">
+      <div class="fieldSet">
+        <fieldset>
+          <legend> Session Information </legend>
+          <p>
+            Session Location
+            <div><textarea name="session_location" rows="3" cols="60">{{prefill_location | default('')}}</textarea></div>
+          </p>
+          
+          <p>
+            Session Description
+            <div><textarea name="session_description" rows="3" cols="60">{{prefill_description | default('')}}</textarea></div>
+          </p>
 
-      <p>
-      Session Speaker(s)
-      <div><textarea name="speakers" rows="1" cols="60">{{prefill_speakers | default('')}}</textarea></div>
-      </p>
+          <p>
+            Session Speaker(s)
+            <div><textarea name="speakers" rows="1" cols="60">{{prefill_speakers | default('')}}</textarea></div>
+          </p>
 
-      <p>
-      Biography
-      <div><textarea name="biography" rows="3" cols="60">{{prefill_biography | default('')}}</textarea></div>
-      </p>
+          <p>
+            Biography
+            <div><textarea name="biography" rows="3" cols="60">{{prefill_biography | default('')}}</textarea></div>
+          </p>
 
-      <p>
-      Survey Link
-      <div><textarea name="survey_link" rows="1" cols="60">{{prefill_survey | default('')}}</textarea></div>
-      </p>
+          <p>
+            Survey Link
+            <div><textarea name="survey_link" rows="1" cols="60">{{prefill_survey | default('')}}</textarea></div>
+          </p>
 
-      <p>
-      Session Name
-      <div><textarea name="session_name" rows="1" cols="60">{{prefill_name | default('')}}</textarea></div>
-      </p>
+          <p>
+            Session Name
+            <div><textarea name="session_name" rows="1" cols="60">{{prefill_name | default('')}}</textarea></div>
+          </p>
 
-      Date: <input type="date" name="date">
-      <p>
-      Start time: <input type="time" name="start_time">
-      End time: <input type="time" name="end_time">
-      </p>
-      
-      <p>
-      <div class="centerelement"><input type="submit" class="button" value="Submit Information"></div>
-      </p>
-
-      </div>
+          Date: <input type="date" name="date">
+          <p>
+            Start time: <input type="time" name="start_time">
+            End time: <input type="time" name="end_time">
+          </p>
+          
+          <p>
+            <div class="centerelement"><input type="submit" class="button" value="Submit Information"></div>
+          </p>
         </fieldset>
-        <input type="hidden" name="prior_name" value='{{prior_name|default('')}}'>
+      </div>
+      
+      <input type="hidden" name="prior_name" value='{{prior_name|default('')}}'>
     </form>
 
     <br>
@@ -113,7 +113,7 @@ if (location == null || location == "") {
       <input type="submit" class="button" value="View Sessions">
     </form>
 
-</body>
+  </body>
 
 </html>
 

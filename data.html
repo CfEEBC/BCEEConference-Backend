@@ -1,87 +1,88 @@
 <!DOCTYPE html>
 {% autoescape true %}
 <html>
-<head>
-<link rel="stylesheet" type="text/css" href="/stylesheets/mainstyle.css" />
-<style> 
-.border
-{
-border:2px solid #a1a1a1;
-padding:30px 70px; 
-background:#dddddd;
-width:70%;
-border-radius:25px;
-margin:auto;
+  <head>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/mainstyle.css" />
+    <style> 
+      .border
+      {
+      border:2px solid #a1a1a1;
+      padding:30px 70px; 
+      background:#dddddd;
+      width:70%;
+      border-radius:25px;
+      margin:auto;
 
-}
+      }
 
 
 
-.right
-{
-position:absolute;
-left:150px;
+      .right
+      {
+      position:absolute;
+      left:150px;
 
-width:70%;
-margin:auto;
+      width:70%;
+      margin:auto;
 
-}
+      }
 
-.text
-{
-    margin: auto;
+      .text
+      {
+      margin: auto;
 
-}
+      }
 
-form
-{
-   display: inline; 
+      form
+      {
+      display: inline; 
 
-}
+      }
 
-</style>
-</head>
+    </style>
+  </head>
   <body>
     <div class="fieldSet">
-    <fieldset>
-    <legend>Current Sessions</legend>
-    {% for session in sessions %}
-    <div class="border">
-        <h1>{{session['Name']}}</h1>
-        <div class="text">
-        <ul>
-            <li>Description: {{session['Description']}} </li>
-            <li>Location: {{session['Location']}} </li>
-            <li>Speakers: {{session['Speakers']}} </li>
-            <li>Biography: {{session['Biography']}} </li>
-            <li>Survey: {{session['Survey']}} </li>
-            <li>Start: {{session['Start']}} </li>
-            <li>End: {{session['End']}} </li>
-        </ul>
-    </div>
-        <div class="right">
-        <form action="/delete" method="post">
-            <input type="hidden" name="key" value="{{session['Name']}}">
-            <input type="submit" value="Delete">
-        </form>
-        <form action="/edit" method="post">
-            <input type="hidden" name="key" value="{{session['Name']}}">
-            <input type="submit" value="Edit">
-        </form>
-    </div>
-    
+      <fieldset>
+        <legend>Current Sessions</legend>
+        {% for session in sessions %}
+        <div class="border">
+          <h1>{{session['Name']}}</h1>
+          <div class="text">
+            <ul>
+              <li>Description: {{session['Description']}} </li>
+              <li>Location: {{session['Location']}} </li>
+              <li>Speakers: {{session['Speakers']}} </li>
+              <li>Biography: {{session['Biography']}} </li>
+              <li>Survey: {{session['Survey']}} </li>
+              <li>Start: {{session['Start']}} </li>
+              <li>End: {{session['End']}} </li>
+            </ul>
+          </div>
+          <div class="right">
+            <form action="/delete" method="post">
+              <input type="hidden" name="key" value="{{session['Name']}}">
+              <input type="submit" value="Delete">
+            </form>
+            <form action="/edit" method="post">
+              <input type="hidden" name="key" value="{{session['Name']}}">
+              <input type="submit" value="Edit">
+            </form>
+          </div>
+          
         </div>
         <br/>
-    {% endfor %}
+        {% endfor %}
 
-    <br>
-    <form action="/add" method="get">
-        <input type="submit" value="Add a new session">
-    </form>
-    
-    Last updated: {{last_update}}
-      </div>
-        </fieldset>
+        <br>
+        <form action="/add" method="get">
+          <input type="submit" value="Add a new session">
+        </form>
+        
+        Last updated: {{last_update}}
+      </fieldset>
+    </div>
+
   </body>
 </html>
 {% endautoescape %}
