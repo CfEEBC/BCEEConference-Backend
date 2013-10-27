@@ -1,7 +1,9 @@
 <!DOCTYPE html>
+{% autoescape true %}
 <html>
 <head>
 <title>BCEE Conference App</title>
+<link rel="stylesheet" type="text/css" href="/stylesheets/mainstyle.css" />
 <script>
 function validateForms() {
 var location = document.forms['addSessionForm']['session_location'].value;
@@ -41,33 +43,72 @@ if (location == null || location == "") {
 } else if (end_time == null || end_time == "") {
     alert("Please specify an ending time");
     return false;
+} else if (location.length > 500 || description.length > 500 || speakers.length > 500 ||
+            biography.length > 500 || survey_link.length > 500 || name.length > 500){
+    alert("Please limit all fields to 500 characters");
+    return false;
 } else {
     return true;
 }
+
 }
 </script>
+
 </head>
 
 <body>
-    <form action="/" method="post" name="addSessionForm" onsubmit="return validateForms()">
+
+    <form action="/" method="post" name="addSessionForm"
+    onsubmit="return validateForms()">
+    <div class="fieldSet">
+    <fieldset>
+    <legend> Session Information </legend>
+      <p>
       Session Location
       <div><textarea name="session_location" rows="3" cols="60"></textarea></div>
+      </p>
+      
+      <p>
       Session Description
       <div><textarea name="session_description" rows="3" cols="60"></textarea></div>
+      </p>
+
+      <p>
       Session Speaker(s)
       <div><textarea name="speakers" rows="1" cols="60"></textarea></div>
+      </p>
+
+      <p>
       Biography
       <div><textarea name="biography" rows="3" cols="60"></textarea></div>
+      </p>
+
+      <p>
       Survey Link
       <div><textarea name="survey_link" rows="1" cols="60"></textarea></div>
+      </p>
+
+      <p>
       Session Name
       <div><textarea name="session_name" rows="1" cols="60"></textarea></div>
+      </p>
+
       Date: <input type="date" name="date">
+
+      <p>
       Start time: <input type="time" name="start_time">
       End time: <input type="time" name="end_time">
-      <div><input type="submit" value="Submit Information"></div>
+      </p>
+      
+      <p>
+      <div class="centerelement"><input type="submit" class="button" value="Submit Information"></div>
+      </p>
+
+      </div>
+        </fieldset>
     </form>
 
 </body>
 
 </html>
+ {% endautoescape %}

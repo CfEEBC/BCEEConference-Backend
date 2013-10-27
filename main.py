@@ -77,7 +77,6 @@ class MainHandler(webapp2.RequestHandler):
 
 class DataHandler(webapp2.RequestHandler):
 
-
     def get(self):
         session_query = Session.query(ancestor=ndb.Key('Type', 'Session'))
         session = session_query.fetch(100)
