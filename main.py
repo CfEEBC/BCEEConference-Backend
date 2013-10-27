@@ -202,6 +202,7 @@ class EditHandler(webapp2.RequestHandler):
         session = (session_query.fetch(1))[0]
         
         template_values = {
+            'prior_name':session.name,
             'submit_target':'/editProcessor',
             'prefill_location':session.location,
             'prefill_description':session.description,
