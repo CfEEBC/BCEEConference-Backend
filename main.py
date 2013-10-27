@@ -36,13 +36,16 @@ JINJA_ENVIRONMENT = jinja2.Environment(
         extensions=['jinja2.ext.autoescape'],
         autoescape=True)
 
+def check_cookies(cookies):
+    return (("admin" in cookies) and cookies["admin"] == cookie_hash)
+
+
 class MainHandler(webapp2.RequestHandler):
 
     def get(self):
         cookies = self.request.cookies
 
-        if (("admin" in cookies) and 
-            cookies["admin"] == cookie_hash):  #check sign-in
+        if check_cookies(cookies):  #check sign-in
             template_values = {}
 
             template = JINJA_ENVIRONMENT.get_template('index.html')
@@ -92,7 +95,7 @@ class DataHandler(webapp2.RequestHandler):
 
     def get(self):
         cookies = self.request.cookies
-        if (("admin" in cookies) and cookies["admin"] == cookie_hash):
+        if check_cookies(cookies):
             
             session_query = Session.query(ancestor=ndb.Key('Type', 'Session'))
             session = session_query.fetch(100)

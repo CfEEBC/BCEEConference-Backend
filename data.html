@@ -1,8 +1,39 @@
 <!DOCTYPE html>
 {% autoescape true %}
 <html>
+<head>
+<style> 
+.border
+{
+border:2px solid #a1a1a1;
+padding:30px 70px; 
+background:#dddddd;
+width:300px;
+border-radius:25px;
+}
+
+
+
+.right
+{
+position:absolute;
+left:150px;
+
+width:300px;
+
+}
+
+form
+{
+    float:left;
+}
+
+</style>
+</head>
   <body>
+    
     {% for session in sessions %}
+    <div class="border">
         <h1>{{session['Name']}}</h1>
         <ul>
             <li>Description: {{session['Description']}} </li>
@@ -13,6 +44,7 @@
             <li>Start: {{session['Start']}} </li>
             <li>End: {{session['End']}} </li>
         </ul>
+        <div class="right">
         <form action="/delete" method="post">
             <input type="hidden" name="key" value="{{session['Name']}}">
             <input type="submit" value="Delete">
@@ -21,7 +53,12 @@
             <input type="hidden" name="key" value="{{session['Name']}}">
             <input type="submit" value="Edit">
         </form>
+    </div>
+    
+        </div>
+        <br/>
     {% endfor %}
+    
   </body>
 </html>
 {% endautoescape %}
