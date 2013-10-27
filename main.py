@@ -51,38 +51,40 @@ class MainHandler(webapp2.RequestHandler):
 
         
     def post(self):
-        session_name = self.request.get("session_name")
-        date = self.request.get("date")
-        start_timeval = self.request.get("start_time")
-        end_timeval = self.request.get("end_time")
-        
-        start = date + " " + start_timeval
-        start_timedate = time.strptime(start, "%Y-%m-%d %H:%M")
-        end = date + " " + end_timeval
-        end_timedate = time.strptime(end, "%Y-%m-%d %H:%M")
+        addSession(self)
 
-        session_location=self.request.get("session_location")
-        session_description=self.request.get("session_description")
-        session_speakers=self.request.get("speakers")
-        session_biography=self.request.get("biography")
-        survey_link=self.request.get("survey_link")
+def addSession(caller):
+    session_name = caller.request.get("session_name")
+    date = caller.request.get("date")
+    start_timeval = caller.request.get("start_time")
+    end_timeval = caller.request.get("end_time")
+    
+    start = date + " " + start_timeval
+    start_timedate = time.strptime(start, "%Y-%m-%d %H:%M")
+    end = date + " " + end_timeval
+    end_timedate = time.strptime(end, "%Y-%m-%d %H:%M")
 
-        
-        session1 = Session(name=session_name,
-                           description=session_description,
-                           location=session_location,
-                           parent=ndb.Key('Type', 'Session', 'Name', session_name),
-                           start_date=datetime.datetime.fromtimestamp(mktime(start_timedate)),
-                           end_date=datetime.datetime.fromtimestamp(mktime(end_timedate)),
-                           speakers=session_speakers,
-                           biography=session_biography,
-                           survey=survey_link)
-        session1.put()
-	
-        template_values = {}
-	template = JINJA_ENVIRONMENT.get_template('confirm.html')
-        self.response.write(template.render(template_values))
-       
+    session_location=caller.request.get("session_location")
+    session_description=caller.request.get("session_description")
+    session_speakers=caller.request.get("speakers")
+    session_biography=caller.request.get("biography")
+    survey_link=caller.request.get("survey_link")
+
+    
+    session1 = Session(name=session_name,
+                       description=session_description,
+                       location=session_location,
+                       parent=ndb.Key('Type', 'Session', 'Name', session_name),
+                       start_date=datetime.datetime.fromtimestamp(mktime(start_timedate)),
+                       end_date=datetime.datetime.fromtimestamp(mktime(end_timedate)),
+                       speakers=session_speakers,
+                       biography=session_biography,
+                       survey=survey_link)
+    session1.put()
+
+    template_values = {}
+    template = JINJA_ENVIRONMENT.get_template('confirm.html')
+    caller.response.write(template.render(template_values))
 
 class DataHandler(webapp2.RequestHandler):
 
@@ -215,13 +217,24 @@ class EditHandler(webapp2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('index.html')
         self.response.write(template.render(template_values))
 
-
+class EditProcessor(webapp2.RequestHandler):
+    def post(self):
+        old_key = ndb.Key('Type', 'Session', 'Name', self.request.get('prior_name'))
+        session_query = Session.query(ancestor=old_key)
+        session = (session_query.fetch(1))[0]
+        session.key.delete()
+        
+        addSession(self)
+        
+        
+        
 app = webapp2.WSGIApplication([
     ('/add', MainHandler),
     ('/data', DataHandler),
     ('/delete', DeleteHandler),
     ('/machine' , jsonHandler),
     ('/edit', EditHandler),
+    ('/editProcessor', EditProcessor),
     ('/' , Login)
 ], debug=True)
 
