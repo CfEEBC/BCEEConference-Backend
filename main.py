@@ -152,9 +152,9 @@ class jsonHandler(webapp2.RequestHandler):
         session_query = Session.query(ancestor=key)
         
         sessions = session_query.fetch(100)
-        string_json = "["
+        sessions_list = []
         for s in sessions:
-            string_json = string_json + json.dumps({
+            sessions_list.append({
                 "session_name" : s.name, 
                 "location" : s.location,
                 "stime" : str(s.start_date), 
@@ -162,10 +162,9 @@ class jsonHandler(webapp2.RequestHandler):
                 "description" : s.description, 
                 "speakers" : s.speakers,
                 "biography" : s.biography, 
-                "survey_link" : s.survey }) + ","
+                "survey_link" : s.survey})
 
-      string_json = string_json[0:-1] + "]"
-      self.response.write(string_json)
+        self.response.write(json.dumps(sessions_list))
 
 
 def make_secure_val(val, password_):
