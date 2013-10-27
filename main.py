@@ -102,7 +102,7 @@ class DataHandler(webapp2.RequestHandler):
             for s in session:
                 session_dict = {
                             'Name':noNone(s.name),
-                            'Decription': noNone(s.description),
+                            'Description': noNone(s.description),
                             'Location':noNone(s.location),
                             'Speakers':noNone(s.speakers),
                             'Biography':noNone(s.biography),
