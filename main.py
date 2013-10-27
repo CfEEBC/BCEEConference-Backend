@@ -22,13 +22,14 @@ import json
 import jinja2
 import os
 import hmac
+from updateTime import updateTime
 
 secret = 'ASPOIUlsf;asf[gjdksl'
 
 hashed_password = "613f7198c3ecc9ff2c078de393c2b140"
 cookie_hash = "admin|613f7198c3ecc9ff2c078de393c2b140"
 
-
+KEY_TIME_CONSTANT = ndb.Key("Time", "Server_Update")
 
 JINJA_ENVIRONMENT = jinja2.Environment(
         loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -38,6 +39,22 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 def check_cookies(cookies):
     return (("admin" in cookies) and cookies["admin"] == cookie_hash)
 
+def update_time(key_time):
+    time_query = updateTime.query(ancestor=key_time)
+    time_fetch = time_query.fetch(1)
+    if len(time_fetch) > 0:
+        time_fetch[0].key.delete()
+    new_time = updateTime(parent=key_time)
+    new_time.put() 
+
+def get_time(key_time):
+    time_query = updateTime.query(ancestor=key_time)
+    time_fetch = time_query.fetch(1)
+    if len(time_fetch) > 0:
+        return time_fetch[0]
+    else:
+        update_time(key_time)
+        return get_time(key_time)
 
 class MainHandler(webapp2.RequestHandler):
 
@@ -57,7 +74,9 @@ class MainHandler(webapp2.RequestHandler):
     def post(self):
         addSession(self)
 
-def addSession(caller):                                               #Form is verified on client
+def addSession(caller):
+    #Form is verified on client
+    update_time(KEY_TIME_CONSTANT)
     session_name = caller.request.get("session_name")
     date = caller.request.get("date")
     start_timeval = caller.request.get("start_time")
@@ -119,10 +138,13 @@ class DataHandler(webapp2.RequestHandler):
                 session_list.append(session_dict)
         
             template_values = {
-                        'sessions':session_list}
+                'sessions':session_list,
+                'last_update':get_time(KEY_TIME_CONSTANT)}
 
             template = JINJA_ENVIRONMENT.get_template('data.html')
             self.response.write(template.render(template_values))
+
+
 
         else:
             self.redirect('/')
@@ -133,6 +155,7 @@ class DeleteHandler(webapp2.RequestHandler):
     
 
     def post(self):
+        update_time(KEY_TIME_CONSTANT)
         key = ndb.Key('Type', 'Session', 'Name', self.request.get("key"))
         session_query = Session.query(ancestor=key)
         
@@ -230,6 +253,7 @@ class EditHandler(webapp2.RequestHandler):
 
 class EditProcessor(webapp2.RequestHandler):
     def post(self):
+        update_time(KEY_TIME_CONSTANT)
         old_key = ndb.Key('Type', 'Session', 'Name', self.request.get('prior_name'))
         session_query = Session.query(ancestor=old_key)
         session = (session_query.fetch(1))[0]
