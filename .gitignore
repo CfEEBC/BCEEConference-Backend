@@ -1,5 +1,7 @@
 # Created by http://gitignore.io
 
+.DS_Store
+
 ### Python ###
 *.py[cod]
 
