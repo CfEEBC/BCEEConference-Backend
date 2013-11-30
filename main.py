@@ -46,6 +46,9 @@ def update_time(key_time):
         time_fetch[0].key.delete()
         new_time = updateTime(parent=key_time)
         new_time.put() 
+    else:
+        new_time = updateTime(parent=key_time)
+        new_time.put()
 
 def get_time(key_time):
     time_query = updateTime.query(ancestor=key_time)
