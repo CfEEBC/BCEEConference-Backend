@@ -84,7 +84,8 @@ class MainHandler(webapp2.RequestHandler):
 
 ## Get fields from addpage site, format and insert into database
 def addSession(caller):
-    #Form is verified lightly on client
+    ## Form is verified lightly on client
+    ## Time is updated
     update_time(KEY_TIME_CONSTANT)
     session_name = caller.request.get("session_name")
     date = caller.request.get("date")
@@ -121,18 +122,21 @@ def addSession(caller):
     template = JINJA_ENVIRONMENT.get_template('confirm.html')
     caller.response.write(template.render(template_values))
 
+## Display sessions on the admin console
+## Requires login cookie
 class DataHandler(webapp2.RequestHandler):
 
     def get(self):
         cookies = self.request.cookies
         if check_cookies(cookies):
             
+            ## Fetch sessions - limited to 100 based on expectation of <50 sessions
             session_query = Session.query(ancestor=ndb.Key('Type', 'Session'))
             session = session_query.fetch(100)
             session_list = []
 
-            #Create list of dictionaries to pass to template
-
+            ## Create list of dictionaries to pass to template
+            ## each dictionary contains info for one session
             for s in session:                                                   
                 session_dict = {
                     'Name':noNone(s.name),
@@ -159,7 +163,7 @@ class DataHandler(webapp2.RequestHandler):
 
 
 class DeleteHandler(webapp2.RequestHandler):
-    
+    ## Gets key name from page, updates time, deletes session and notifies user
     def post(self):
         update_time(KEY_TIME_CONSTANT)
         key = ndb.Key('Type', 'Session', 'Name', self.request.get("key"))
@@ -167,6 +171,7 @@ class DeleteHandler(webapp2.RequestHandler):
         
         sessions = session_query.fetch(100)
         
+
         for s in sessions:
             self.response.write('Deleted: ' + s.name + '<br/>')
             s.key.delete()
@@ -183,6 +188,7 @@ def noNoneDate(date):
     else:
         return date.isoformat()
 
+## Display sessions in json for apps
 class jsonHandler(webapp2.RequestHandler):
 
     def get(self):
@@ -204,15 +210,18 @@ class jsonHandler(webapp2.RequestHandler):
 
         self.response.write(json.dumps(sessions_list))
 
+## Makes cookie with format val|hashed-password
 def make_secure_val(val, password_):
     return '%s|%s' % (val, hmac.new(secret, password_).hexdigest())
 
+## Allows for login, redirects to addsession page
 class Login(webapp2.RequestHandler):
     def get(self):
         template_values = {}
         template = JINJA_ENVIRONMENT.get_template('login-form.html')
         self.response.write(template.render(template_values))
-        
+    
+    ## Get password from form, check password, if valid set cookie    
     def post(self):
         password_log = self.request.get('password')
 
@@ -228,6 +237,7 @@ class Login(webapp2.RequestHandler):
             template = JINJA_ENVIRONMENT.get_template('login-form.html')
             self.response.write(template.render(template_values))
 
+## Prepopulate forms with information 
 class EditHandler(webapp2.RequestHandler):
     def post(self):
         session_name = self.request.get('key')
@@ -250,6 +260,7 @@ class EditHandler(webapp2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('index.html')
         self.response.write(template.render(template_values))
 
+## Update time, delete old version and add new version of session
 class EditProcessor(webapp2.RequestHandler):
     def post(self):
         update_time(KEY_TIME_CONSTANT)
@@ -259,7 +270,8 @@ class EditProcessor(webapp2.RequestHandler):
         session.key.delete()
         
         addSession(self)
-        
+
+## Allows for machine to check last updated time of server        
 class MetaHandler(webapp2.RequestHandler):
     def get(self):
         self.response.write(json.dumps({
