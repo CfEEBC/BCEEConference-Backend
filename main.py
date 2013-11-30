@@ -24,8 +24,8 @@ import os
 import hmac
 from updateTime import updateTime
 
+# Not the actual values used on the live website
 secret = 'ASPOIUlsf;asf[gjdksl'
-
 hashed_password = "613f7198c3ecc9ff2c078de393c2b140"
 cookie_hash = "admin|613f7198c3ecc9ff2c078de393c2b140"
 
@@ -36,9 +36,11 @@ JINJA_ENVIRONMENT = jinja2.Environment(
     extensions=['jinja2.ext.autoescape'],
     autoescape=True)
 
+## Checks cookie against expected cookie
 def check_cookies(cookies):
     return (("admin" in cookies) and cookies["admin"] == cookie_hash)
 
+## Updates time to current time if there was a previous time, if no previous time create time at current time
 def update_time(key_time):
     time_query = updateTime.query(ancestor=key_time)
     time_fetch = time_query.fetch(1)
@@ -50,6 +52,7 @@ def update_time(key_time):
         new_time = updateTime(parent=key_time)
         new_time.put()
 
+## Return time in database, if there is no time call update_time to update and then get time
 def get_time(key_time):
     time_query = updateTime.query(ancestor=key_time)
     time_fetch = time_query.fetch(1)
@@ -60,6 +63,7 @@ def get_time(key_time):
         return get_time(key_time)
 
 class MainHandler(webapp2.RequestHandler):
+
 
     def get(self):
         cookies = self.request.cookies
@@ -77,14 +81,17 @@ class MainHandler(webapp2.RequestHandler):
     def post(self):
         addSession(self)
 
+
+## Get fields from addpage site, format and insert into database
 def addSession(caller):
-    #Form is verified on client
+    #Form is verified lightly on client
     update_time(KEY_TIME_CONSTANT)
     session_name = caller.request.get("session_name")
     date = caller.request.get("date")
     start_timeval = caller.request.get("start_time")
     end_timeval = caller.request.get("end_time")
     
+    ## format times to DateTime object
     start = date + " " + start_timeval
     start_timedate = time.strptime(start, "%Y-%m-%d %H:%M")
     end = date + " " + end_timeval
@@ -96,7 +103,9 @@ def addSession(caller):
     session_biography=caller.request.get("biography")
     survey_link=caller.request.get("survey_link")
 
-    
+    ## Create a session object with parameters from forms ->
+    ## Give parent keys Type Session Name and key = session name ->
+    ## put in database
     session1 = Session(name=session_name,
                        description=session_description,
                        location=session_location,
